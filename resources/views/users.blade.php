@@ -16,20 +16,20 @@
     <form action="{{ route('users.store') }}" method="POST" style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
         @csrf
         <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 0.5rem;">
-            <label style="font-size: 0.9rem; color: #cbd5e1;">Nama Lengkap</label>
-            <input type="text" name="name" required placeholder="Nama Lengkap" style="background: rgba(15,23,42,0.6); border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 8px; color: white;">
+            <label style="font-size: 0.9rem; color: var(--text-muted);">Nama Lengkap</label>
+            <input type="text" name="name" required placeholder="Nama Lengkap" style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 8px; color: var(--text-main);">
         </div>
         <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 0.5rem;">
-            <label style="font-size: 0.9rem; color: #cbd5e1;">Email</label>
-            <input type="email" name="email" required placeholder="Alamat Email" style="background: rgba(15,23,42,0.6); border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 8px; color: white;">
+            <label style="font-size: 0.9rem; color: var(--text-muted);">Email</label>
+            <input type="email" name="email" required placeholder="Alamat Email" style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 8px; color: var(--text-main);">
         </div>
         <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 0.5rem;">
-            <label style="font-size: 0.9rem; color: #cbd5e1;">Password</label>
-            <input type="password" name="password" required placeholder="Minimal 8 karakter" style="background: rgba(15,23,42,0.6); border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 8px; color: white;">
+            <label style="font-size: 0.9rem; color: var(--text-muted);">Password</label>
+            <input type="password" name="password" required placeholder="Minimal 8 karakter" style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 8px; color: var(--text-main);">
         </div>
         <div style="flex: 1; min-width: 150px; display: flex; flex-direction: column; gap: 0.5rem;">
-            <label style="font-size: 0.9rem; color: #cbd5e1;">Role</label>
-            <select name="role" required style="background: rgba(15,23,42,0.6); border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 8px; color: white;">
+            <label style="font-size: 0.9rem; color: var(--text-muted);">Role</label>
+            <select name="role" required style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 8px; color: var(--text-main);">
                 <option value="user">Pengguna Biasa</option>
                 <option value="admin">Admin / Petugas</option>
             </select>
@@ -56,16 +56,16 @@
             </thead>
             <tbody>
                 @foreach($users as $u)
-                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <tr style="border-bottom: 1px solid var(--border-color);">
                     <td style="padding: 1rem;">
                         <strong>{{ $u->name }}</strong>
                         @if($u->id === Auth::id())
                             <span style="font-size: 0.7rem; background: var(--primary-color); color: white; padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.5rem;">Anda</span>
                         @endif
                     </td>
-                    <td style="padding: 1rem; color: #cbd5e1;">{{ $u->email }}</td>
+                    <td style="padding: 1rem; color: var(--text-muted);">{{ $u->email }}</td>
                     <td style="padding: 1rem;">
-                        <span style="background: rgba(255,255,255,0.1); padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem;">
+                        <span style="border: 1px solid var(--border-color); padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem;">
                             {{ ucfirst($u->role) }}
                         </span>
                     </td>
@@ -81,15 +81,15 @@
                     <td style="padding: 1rem;">
                         @if($u->account_status === 'pending' && $u->id !== Auth::id())
                         <div style="display: flex; gap: 0.5rem;">
-                            <form method="POST" action="{{ route('users.updateStatus', $u) }}">
+                            <form method="POST" action="{{ route('users.updateStatus', $u) }}" onsubmit="return confirm('Yakin ingin menyetujui pengguna ini untuk bergabung?');">
                                 @csrf
                                 <input type="hidden" name="account_status" value="approved">
-                                <button type="submit" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); padding: 0.3rem 0.6rem; border-radius: 5px; cursor: pointer; font-size: 0.8rem;">Setujui</button>
+                                <button type="submit" class="btn-action btn-success">Setujui</button>
                             </form>
-                            <form method="POST" action="{{ route('users.updateStatus', $u) }}">
+                            <form method="POST" action="{{ route('users.updateStatus', $u) }}" onsubmit="return confirm('Yakin ingin menolak pendaftaran pengguna ini?');">
                                 @csrf
                                 <input type="hidden" name="account_status" value="rejected">
-                                <button type="submit" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); padding: 0.3rem 0.6rem; border-radius: 5px; cursor: pointer; font-size: 0.8rem;">Tolak</button>
+                                <button type="submit" class="btn-action btn-danger">Tolak</button>
                             </form>
                         </div>
                         @else

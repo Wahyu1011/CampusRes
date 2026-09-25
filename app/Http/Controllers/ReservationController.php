@@ -24,8 +24,32 @@ class ReservationController extends Controller
     {
         $request->validate([
             'facility_id' => 'required|exists:facilities,id',
-            'start_time' => 'required|date|after:now',
-            'end_time' => 'required|date|after:start_time',
+            'start_time' => [
+                'required', 'date', 'after:now',
+                function ($attribute, $value, $fail) {
+                    $time = \Carbon\Carbon::parse($value);
+                    if ($time->minute !== 0 && $time->minute !== 30) {
+                        $fail('Waktu Mulai hanya boleh tepat pada menit ke-00 atau 30.');
+                    }
+                    $hour = $time->format('H:i');
+                    if ($hour < '07:00' || $hour >= '20:00') {
+                        $fail('Jam operasional peminjaman adalah dari pukul 07:00 hingga 20:00.');
+                    }
+                },
+            ],
+            'end_time' => [
+                'required', 'date', 'after:start_time',
+                function ($attribute, $value, $fail) {
+                    $time = \Carbon\Carbon::parse($value);
+                    if ($time->minute !== 0 && $time->minute !== 30) {
+                        $fail('Waktu Selesai hanya boleh tepat pada menit ke-00 atau 30.');
+                    }
+                    $hour = $time->format('H:i');
+                    if ($hour <= '07:00' || $hour > '20:00') {
+                        $fail('Batas maksimal waktu selesai peminjaman adalah pukul 20:00.');
+                    }
+                },
+            ],
             'nim' => 'required|string',
             'department' => 'required|string',
             'organization' => 'nullable|string',
@@ -34,6 +58,16 @@ class ReservationController extends Controller
             'participant_count' => 'required|integer|min:1',
             'commitment_agreed' => 'required|accepted',
         ]);
+
+        $overlap = Reservation::where('facility_id', $request->facility_id)
+            ->whereIn('status', ['approved', 'pending'])
+            ->where('start_time', '<', $request->end_time)
+            ->where('end_time', '>', $request->start_time)
+            ->exists();
+
+        if ($overlap) {
+            return back()->withErrors(['Jadwal bentrok! Fasilitas ini sudah direservasi dan disetujui untuk kegiatan lain pada waktu tersebut. Silakan pilih waktu atau fasilitas lain.'])->withInput();
+        }
 
         Reservation::create([
             'user_id' => Auth::id(),
@@ -67,14 +101,9 @@ class ReservationController extends Controller
             $overlap = Reservation::where('facility_id', $reservation->facility_id)
                 ->where('id', '!=', $reservation->id)
                 ->where('status', 'approved')
-                ->where(function ($query) use ($reservation) {
-                    $query->whereBetween('start_time', [$reservation->start_time, $reservation->end_time])
-                          ->orWhereBetween('end_time', [$reservation->start_time, $reservation->end_time])
-                          ->orWhere(function ($q) use ($reservation) {
-                              $q->where('start_time', '<=', $reservation->start_time)
-                                ->where('end_time', '>=', $reservation->end_time);
-                          });
-                })->exists();
+                ->where('start_time', '<', $reservation->end_time)
+                ->where('end_time', '>', $reservation->start_time)
+                ->exists();
 
             if ($overlap) {
                 return back()->withErrors(['Jadwal bentrok! Fasilitas ini sudah disetujui untuk kegiatan lain pada rentang waktu tersebut.']);

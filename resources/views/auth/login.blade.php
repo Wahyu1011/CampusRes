@@ -20,7 +20,10 @@
             </div>
             <div class="input-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Masukkan password Anda" required>
+                <div style="position: relative; display: flex; align-items: center;">
+                    <input type="password" id="password" name="password" placeholder="Masukkan password Anda" required style="padding-right: 40px; width: 100%;">
+                    <i class="fas fa-eye" id="togglePassword" style="position: absolute; right: 15px; cursor: pointer; color: #64748b;" onclick="toggleVisibility('password', 'togglePassword')"></i>
+                </div>
             </div>
             <div class="form-options">
                 <label class="remember-me">
@@ -50,3 +53,22 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    function toggleVisibility(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>
+@endpush

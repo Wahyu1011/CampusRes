@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('dashboard.css') }}?v={{ time() }}">
 @endpush
 
 @section('content')
@@ -41,7 +41,18 @@
                     <i class="fas fa-search"></i>
                     <input type="text" name="search" placeholder="Cari fasilitas..." value="{{ request('search') }}">
                 </form>
-                <div class="user-profile">
+                <div class="user-profile" style="display: flex; align-items: center; gap: 1rem;">
+                    @if(!request()->routeIs('dashboard'))
+                    <!-- Tombol Back Global -->
+                    <a href="javascript:history.back()" title="Kembali ke halaman sebelumnya" style="color: var(--text-muted); text-decoration: none; display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.05); transition: background 0.3s; margin-right: 0.5rem;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    @endif
+                    
+                    <!-- Toggle Theme -->
+                    <button id="themeToggleBtn" title="Ganti Tema" style="border: none; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.05); transition: background 0.3s; margin-right: 0.5rem;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                        <i class="fas fa-sun" id="themeIcon"></i>
+                    </button>
                     <div class="notification-bell">
                         <i class="fas fa-bell"></i>
                         @php
@@ -83,5 +94,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('dashboard.js') }}"></script>
+    <script src="{{ asset('dashboard.js') }}?v={{ time() }}"></script>
 @endpush

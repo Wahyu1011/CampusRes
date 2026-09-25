@@ -14,7 +14,7 @@
             
             <div style="display: flex; flex-direction: column; gap: 0.5rem;">
                 <label for="facility_id" style="font-weight: 500;">Pilih Fasilitas <span style="color:red;">*</span></label>
-                <select name="facility_id" id="facility_id" required style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.8rem; border-radius: 8px; color: white; outline: none;">
+                <select name="facility_id" id="facility_id" required style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 8px; color: var(--text-main); outline: none;">
                     <option value="">-- Pilih Fasilitas --</option>
                     @foreach($facilities as $fac)
                         <option value="{{ $fac->id }}" {{ $selectedFacility == $fac->id ? 'selected' : '' }}>{{ $fac->name }} ({{ $fac->location }})</option>
@@ -24,24 +24,24 @@
 
             <div style="display: flex; flex-direction: column; gap: 0.5rem;">
                 <label for="category" style="font-weight: 500;">Kategori Kerusakan <span style="color:red;">*</span></label>
-                <select name="category" id="category" required style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.8rem; border-radius: 8px; color: white; outline: none;">
+                <select name="category" id="category" required style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 8px; color: var(--text-main); outline: none;">
                     <option value="">-- Pilih Kategori --</option>
-                    <option value="Listrik / Lampu">Listrik / Lampu</option>
-                    <option value="AC / Pendingin">AC / Pendingin Ruangan</option>
-                    <option value="Kebersihan">Kebersihan</option>
-                    <option value="Peralatan Patah / Rusak">Peralatan Patah / Rusak (Meja, Kursi, dsb)</option>
-                    <option value="Lainnya">Lainnya</option>
+                    <option value="Listrik / Lampu" {{ old('category') == 'Listrik / Lampu' ? 'selected' : '' }}>Listrik / Lampu</option>
+                    <option value="AC / Pendingin" {{ old('category') == 'AC / Pendingin' ? 'selected' : '' }}>AC / Pendingin Ruangan</option>
+                    <option value="Kebersihan" {{ old('category') == 'Kebersihan' ? 'selected' : '' }}>Kebersihan</option>
+                    <option value="Peralatan Patah / Rusak" {{ old('category') == 'Peralatan Patah / Rusak' ? 'selected' : '' }}>Peralatan Patah / Rusak (Meja, Kursi, dsb)</option>
+                    <option value="Lainnya" {{ old('category') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
                 </select>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 0.5rem;">
                 <label for="description" style="font-weight: 500;">Deskripsi Kerusakan <span style="color:red;">*</span></label>
-                <textarea id="description" name="description" rows="4" required placeholder="Jelaskan detail kerusakannya..." style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.8rem; border-radius: 8px; color: white; outline: none; resize: vertical;"></textarea>
+                <textarea id="description" name="description" rows="4" required placeholder="Jelaskan detail kerusakannya..." style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 8px; color: var(--text-main); outline: none; resize: vertical;">{{ old('description') }}</textarea>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 0.5rem;">
                 <label for="image" style="font-weight: 500;">Foto Bukti Kerusakan (Opsional)</label>
-                <input type="file" id="image" name="image" accept="image/*" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.8rem; border-radius: 8px; color: white; outline: none;">
+                <input type="file" id="image" name="image" accept="image/*" style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 8px; color: var(--text-main); outline: none;">
                 <small style="color: var(--text-muted);">Maksimal ukuran foto 2MB (JPG/PNG).</small>
             </div>
 

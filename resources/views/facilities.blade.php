@@ -22,32 +22,32 @@
         <div class="facility-cards">
             @foreach(\App\Models\Facility::all() as $facility)
             <div class="facility-card">
-                <div class="facility-img" style="background-image: url('{{ $facility->image_url }}')"></div>
+                <div class="facility-img" style="background-image: url('{{ asset($facility->image_url) }}')"></div>
                 <div class="facility-info">
                     <h4 style="display: flex; align-items: center; justify-content: space-between;">
                         {{ $facility->name }}
                         @if($facility->status == 'maintenance')
-                            <span style="font-size: 0.6rem; background: rgba(239, 68, 68, 0.2); color: #fca5a5; padding: 0.2rem 0.5rem; border-radius: 4px;">Perbaikan</span>
+                            <span class="status status-danger" style="font-size: 0.6rem; padding: 0.2rem 0.5rem; border-radius: 4px;">Perbaikan</span>
                         @endif
                     </h4>
                     <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.2rem;"><i class="fas fa-map-marker-alt"></i> {{ $facility->location }}</p>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;"><i class="fas fa-tag"></i> {{ $facility->type ?? 'Umum' }} &nbsp;&bull;&nbsp; <i class="fas fa-users"></i> {{ $facility->capacity ?? '-' }} Orang</p>
-                    <p style="font-size: 0.8rem; color: #cbd5e1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 1rem;">{{ $facility->description }}</p>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 1rem;">{{ $facility->description }}</p>
                     @if(Auth::user()->role === 'user')
                     <div style="margin-top: auto;">
                         @if($facility->status == 'maintenance')
-                            <button class="btn-reserve" style="display: block; width: 100%; text-align: center; background: #475569; color: #94a3b8; cursor: not-allowed; border: none;" disabled>Sedang Diperbaiki</button>
+                            <button class="btn-reserve" style="display: block; width: 100%; text-align: center; background: var(--border-color); color: var(--text-muted); cursor: not-allowed; border: none;" disabled>Sedang Diperbaiki</button>
                         @else
                             <a href="{{ route('reservations.create', $facility) }}" class="btn-reserve" style="display: block; text-align: center; text-decoration: none;">Cek Jadwal & Reservasi</a>
                         @endif
                     </div>
                     @elseif(Auth::user()->role === 'admin')
                     <div style="display: flex; gap: 0.5rem; margin-top: auto; padding-top: 1rem;">
-                        <a href="{{ route('facilities.edit', $facility) }}" style="flex: 1; text-align: center; background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); padding: 0.5rem; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-edit"></i> Edit</a>
-                        <form method="POST" action="{{ route('facilities.destroy', $facility) }}" style="flex: 1;" onsubmit="return confirm('Yakin ingin menghapus fasilitas ini?');">
+                        <a href="{{ route('facilities.edit', $facility) }}" class="btn-action btn-primary" style="flex: 1; padding: 0.5rem; font-size: 0.85rem;"><i class="fas fa-edit"></i> Edit</a>
+                        <form method="POST" action="{{ route('facilities.destroy', $facility) }}" style="flex: 1; display: flex;" onsubmit="return confirm('Yakin ingin menghapus fasilitas ini?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" style="width: 100%; background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); padding: 0.5rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 600;"><i class="fas fa-trash"></i> Hapus</button>
+                            <button type="submit" class="btn-action btn-danger" style="flex: 1; padding: 0.5rem; font-size: 0.85rem;"><i class="fas fa-trash"></i> Hapus</button>
                         </form>
                     </div>
                     @endif

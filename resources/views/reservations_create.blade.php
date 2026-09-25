@@ -2,14 +2,19 @@
 
 @section('title', 'Cek Jadwal & Reservasi | Sistem Pendaftaran')
 
-@section('content')
-<div class="welcome-section mb-4">
-    <h1>Reservasi Fasilitas</h1>
-    <p>Cek ketersediaan jadwal dan lengkapi formulir peminjaman untuk <strong>{{ $facility->name }}</strong></p>
+@section('dashboard_content')
+<div class="welcome-section mb-4" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+    <div>
+        <h1><i class="fas fa-calendar-check" style="color: var(--primary-color); margin-right: 0.5rem;"></i> Reservasi Fasilitas</h1>
+        <p>Cek ketersediaan jadwal dan lengkapi formulir peminjaman untuk <strong>{{ $facility->name }}</strong></p>
+    </div>
+    <a href="{{ route('dashboard') }}" style="background: var(--input-bg); padding: 0.6rem 1.2rem; border-radius: 8px; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; border: 1px solid var(--border-color); transition: 0.3s;" onmouseover="this.style.background='var(--card-bg)'" onmouseout="this.style.background='var(--input-bg)'">
+        <i class="fas fa-arrow-left"></i> Kembali
+    </a>
 </div>
 
 @if($errors->any())
-<div class="alert" style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); padding: 1rem; border-radius: 8px; color: #fca5a5; margin-bottom: 1.5rem;">
+<div class="alert-danger">
     <ul style="margin-left: 1.5rem;">
         @foreach($errors->all() as $error)
             <li>{{ $error }}</li>
@@ -76,7 +81,7 @@
             @csrf
             <input type="hidden" name="facility_id" value="{{ $facility->id }}">
             
-            <div style="background: rgba(15,23,42,0.5); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+            <div style="background: var(--input-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
                 <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--primary-color);">1. Identitas Pemohon</h3>
                 
                 <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
@@ -88,75 +93,163 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
                         <label for="nim" style="font-weight: 500;">NIM <span style="color: red;">*</span></label>
-                        <input type="text" name="nim" id="nim" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 100%;">
+                        <input type="text" name="nim" id="nim" value="{{ old('nim') }}" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 100%;">
                     </div>
                     
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
                         <label for="department" style="font-weight: 500;">Program Studi / Departemen <span style="color: red;">*</span></label>
-                        <input type="text" name="department" id="department" placeholder="Contoh: S1 Informatika" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 100%;">
+                        <input type="text" name="department" id="department" value="{{ old('department') }}" placeholder="Contoh: S1 Informatika" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 100%;">
                     </div>
                 </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
                         <label for="organization" style="font-weight: 500;">Nama Organisasi / UKM (Opsional)</label>
-                        <input type="text" name="organization" id="organization" placeholder="Jika ada" style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 100%;">
+                        <input type="text" name="organization" id="organization" value="{{ old('organization') }}" placeholder="Jika ada" style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 100%;">
                     </div>
                     
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
                         <label for="phone" style="font-weight: 500;">Nomor HP / WhatsApp <span style="color: red;">*</span></label>
-                        <input type="text" name="phone" id="phone" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 100%;">
+                        <input type="text" name="phone" id="phone" value="{{ old('phone') }}" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 100%;">
                     </div>
                 </div>
             </div>
 
-            <div style="background: rgba(15,23,42,0.5); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+            <div style="background: var(--input-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
                 <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--primary-color);">2. Rincian Waktu Penggunaan</h3>
                 <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Fasilitas terpilih: <strong>{{ $facility->name }}</strong></p>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
                         <label for="start_time" style="font-weight: 500;">Waktu Mulai <span style="color: red;">*</span></label>
-                        <input type="datetime-local" name="start_time" id="start_time" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 100%;">
+                        <input type="datetime-local" name="start_time" id="start_time" value="{{ old('start_time') }}" step="1800" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 100%;">
                     </div>
                     
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
                         <label for="end_time" style="font-weight: 500;">Waktu Selesai <span style="color: red;">*</span></label>
-                        <input type="datetime-local" name="end_time" id="end_time" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 100%;">
+                        <input type="datetime-local" name="end_time" id="end_time" value="{{ old('end_time') }}" step="1800" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 100%;">
                     </div>
                 </div>
             </div>
             
-            <div style="background: rgba(15,23,42,0.5); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+            <div style="background: var(--input-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
                 <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--primary-color);">3. Detail Kegiatan</h3>
                 
                 <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
                         <label for="activity_name" style="font-weight: 500;">Nama / Keperluan Kegiatan <span style="color: red;">*</span></label>
-                        <input type="text" name="activity_name" id="activity_name" placeholder="Contoh: Rapat Kerja HMJ" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 100%;">
+                        <input type="text" name="activity_name" id="activity_name" value="{{ old('activity_name') }}" placeholder="Contoh: Rapat Kerja HMJ" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 100%;">
                     </div>
                     
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
                         <label for="participant_count" style="font-weight: 500;">Estimasi Peserta <span style="color: red;">*</span></label>
-                        <input type="number" name="participant_count" id="participant_count" min="1" placeholder="Jumlah orang" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 100%;">
+                        <input type="number" name="participant_count" id="participant_count" value="{{ old('participant_count') }}" min="1" placeholder="Jumlah orang" required style="padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 100%;">
                     </div>
                 </div>
             </div>
             
-            <div style="background: rgba(15,23,42,0.5); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+            <div style="background: var(--input-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
                 <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--primary-color);">4. Pernyataan Konfirmasi</h3>
                 
                 <label style="display: flex; align-items: flex-start; gap: 1rem; cursor: pointer;">
                     <input type="checkbox" name="commitment_agreed" value="1" required style="margin-top: 0.3rem; transform: scale(1.2);">
-                    <span style="line-height: 1.5; color: #cbd5e1;">Saya selaku pemohon berkomitmen untuk menjaga kebersihan, kerapian, tidak merusak fasilitas, dan mengembalikan ruangan ke kondisi semula. Saya bersedia menanggung akibat apabila terjadi kerusakan.</span>
+                    <span style="line-height: 1.5; color: var(--text-muted);">Saya selaku pemohon berkomitmen untuk menjaga kebersihan, kerapian, tidak merusak fasilitas, dan mengembalikan ruangan ke kondisi semula. Saya bersedia menanggung akibat apabila terjadi kerusakan. <span style="color: red;">*</span></span>
                 </label>
             </div>
             
             <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem;">
-                <a href="{{ route('dashboard') }}" style="padding: 0.8rem 1.5rem; border-radius: 8px; color: white; text-decoration: none; border: 1px solid var(--border-color);">Batal</a>
+                <button type="button" id="clearDraftBtn" class="btn-danger" style="padding: 0.8rem 1.5rem; border-radius: 8px; text-decoration: none; cursor: pointer;">Kosongkan Form</button>
+                <a href="{{ route('dashboard') }}" class="btn-action" style="padding: 0.8rem 1.5rem; border-radius: 8px; color: var(--text-main); text-decoration: none; border: 1px solid var(--border-color);">Batal</a>
                 <button type="submit" class="btn-reserve" style="width: auto; padding: 0.8rem 2rem;">Kirim Permohonan Peminjaman</button>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const formId = 'reservation_draft_{{ $facility->id }}_user_{{ Auth::id() }}';
+    const form = document.querySelector('.facility-form');
+    const inputs = form.querySelectorAll('input:not([type="hidden"]):not([disabled]), select, textarea');
+    const clearBtn = document.getElementById('clearDraftBtn');
+    
+    // Cek apakah ada error validasi dari server
+    const hasErrors = {{ $errors->any() ? 'true' : 'false' }};
+    
+    // Jika tidak ada error (bukan kembali dari submit gagal), pulihkan draf
+    if (!hasErrors) {
+        const draft = JSON.parse(localStorage.getItem(formId) || '{}');
+        inputs.forEach(input => {
+            if (draft[input.name] !== undefined) {
+                if (input.type === 'checkbox') {
+                    input.checked = draft[input.name] === 'true';
+                } else {
+                    input.value = draft[input.name];
+                }
+            }
+        });
+    }
+
+    // Simpan otomatis setiap kali user mengetik/mengubah isian
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            const draft = JSON.parse(localStorage.getItem(formId) || '{}');
+            if (input.type === 'checkbox') {
+                draft[input.name] = input.checked ? 'true' : 'false';
+            } else {
+                draft[input.name] = input.value;
+            }
+            localStorage.setItem(formId, JSON.stringify(draft));
+        });
+    });
+
+    // Tombol Kosongkan Form
+    clearBtn.addEventListener('click', () => {
+        if(confirm('Yakin ingin mengosongkan semua isian form ini?')) {
+            localStorage.removeItem(formId);
+            inputs.forEach(input => {
+                if (input.type === 'checkbox') {
+                    input.checked = false;
+                } else {
+                    input.value = '';
+                }
+            });
+        }
+    });
+
+    // Client-side overlap validation
+    const existingSchedules = @json($reservations->map(function($res) {
+        return [
+            'start' => \Carbon\Carbon::parse($res->start_time)->format('Y-m-d\TH:i'),
+            'end' => \Carbon\Carbon::parse($res->end_time)->format('Y-m-d\TH:i')
+        ];
+    }));
+
+    form.addEventListener('submit', function(e) {
+        const startInput = document.getElementById('start_time').value;
+        const endInput = document.getElementById('end_time').value;
+        
+        if (!startInput || !endInput) return;
+        
+        const start = new Date(startInput);
+        const end = new Date(endInput);
+        
+        let isOverlap = false;
+        for (let i = 0; i < existingSchedules.length; i++) {
+            const schStart = new Date(existingSchedules[i].start);
+            const schEnd = new Date(existingSchedules[i].end);
+            
+            if (start < schEnd && end > schStart) {
+                isOverlap = true;
+                break;
+            }
+        }
+        
+        if (isOverlap) {
+            e.preventDefault();
+            alert('JADWAL NABRAK! Fasilitas ini sudah direservasi pada rentang waktu tersebut. Silakan pilih waktu lain.');
+        }
+    });
+});
+</script>
 @endsection

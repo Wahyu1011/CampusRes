@@ -127,8 +127,35 @@ body { background-color: var(--bg-color); color: var(--text-main); min-height: 1
 .res-details h4 { font-size: 0.95rem; margin-bottom: 0.3rem; }
 .res-details p { color: var(--text-muted); font-size: 0.8rem; }
 .status { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+.status-primary { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
 .status-approved { background: rgba(16, 185, 129, 0.15); color: #34d399; }
 .status-pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+.status-danger { background: rgba(239, 68, 68, 0.15); color: #fca5a5; }
+
+.note-success { background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.8rem; margin-bottom: 1rem; border-radius: 4px; font-size: 0.9rem; }
+.note-success strong { color: #34d399; }
+.note-danger { background: rgba(239, 68, 68, 0.1); padding: 0.5rem 0.8rem; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.3); font-size: 0.8rem; color: #fca5a5; }
+
+.icon-primary { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+.icon-success { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+.icon-warning { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+
+.alert-success { background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem; }
+.alert-danger { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem; }
+
+/* Action Buttons */
+.btn-action { padding: 0.3rem 0.6rem; border-radius: 5px; cursor: pointer; font-size: 0.8rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.3rem; border: 1px solid transparent; transition: all 0.3s; }
+.btn-action-lg { padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; width: 100%; }
+
+.btn-primary { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border-color: rgba(59, 130, 246, 0.4); }
+.btn-success { background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.4); }
+.btn-danger { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border-color: rgba(239, 68, 68, 0.4); }
+.btn-warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border-color: rgba(245, 158, 11, 0.4); }
+
+.btn-primary:hover { background: rgba(59, 130, 246, 0.3); }
+.btn-success:hover { background: rgba(16, 185, 129, 0.3); }
+.btn-danger:hover { background: rgba(239, 68, 68, 0.3); }
+.btn-warning:hover { background: rgba(245, 158, 11, 0.3); }
 
 @media (max-width: 992px) {
     .content-grid { grid-template-columns: 1fr; }
@@ -143,3 +170,54 @@ body { background-color: var(--bg-color); color: var(--text-main); min-height: 1
     .user-profile span { display: none; }
     .search-bar { width: 200px; }
 }
+
+/* Light Mode Overrides */
+body.light-mode {
+    --primary-color: #4f46e5;
+    --primary-hover: #4338ca;
+    --bg-color: #f8fafc;
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --input-bg: #ffffff;
+}
+body.light-mode .background-animation {
+    background: radial-gradient(circle at center, #e2e8f0 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, #cbd5e1 0%, transparent 30%);
+}
+body.light-mode .facility-card,
+body.light-mode .reservation-item {
+    background: rgba(255, 255, 255, 0.8);
+}
+body.light-mode .sidebar {
+    background: rgba(255, 255, 255, 0.85);
+}
+body.light-mode .sidebar-header h2 {
+    background: linear-gradient(to right, #4338ca, #6366f1);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+/* Light mode overrides for action buttons and badges */
+body.light-mode .btn-primary { color: #2563eb; background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.3); }
+body.light-mode .btn-success { color: #059669; background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); }
+body.light-mode .btn-danger { color: #dc2626; background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); }
+body.light-mode .btn-warning { color: #d97706; background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.3); }
+
+body.light-mode .btn-reserve { color: #4338ca; background: rgba(79, 70, 229, 0.15); border-color: rgba(79, 70, 229, 0.3); }
+body.light-mode .btn-reserve:hover { background: var(--primary-color); color: white; }
+
+body.light-mode .status-primary { color: #1d4ed8; background: rgba(59, 130, 246, 0.2); }
+body.light-mode .status-approved { color: #047857; background: rgba(16, 185, 129, 0.2); }
+body.light-mode .status-pending { color: #b45309; background: rgba(245, 158, 11, 0.2); }
+body.light-mode .status-danger { color: #b91c1c; background: rgba(239, 68, 68, 0.2); }
+
+body.light-mode .note-success strong { color: #047857; }
+body.light-mode .note-danger { color: #b91c1c; }
+
+body.light-mode .icon-primary { color: #2563eb; }
+body.light-mode .icon-success { color: #059669; }
+body.light-mode .icon-warning { color: #d97706; }
+
+body.light-mode .alert-success { color: #047857; background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3); }
+body.light-mode .alert-danger { color: #b91c1c; background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); }
