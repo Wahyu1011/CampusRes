@@ -45,6 +45,7 @@
                 <select id="status" name="status" required style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 8px; color: var(--text-main); outline: none;">
                     <option value="active" {{ old('status', $facility->status ?? 'active') == 'active' ? 'selected' : '' }}>Aktif (Bisa Dipesan)</option>
                     <option value="maintenance" {{ old('status', $facility->status ?? '') == 'maintenance' ? 'selected' : '' }}>Dalam Perbaikan (Tidak Bisa Dipesan)</option>
+                    <option value="inactive" {{ old('status', $facility->status ?? '') == 'inactive' ? 'selected' : '' }}>Nonaktif (Tidak Bisa Dipesan)</option>
                 </select>
             </div>
 
