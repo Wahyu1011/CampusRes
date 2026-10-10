@@ -225,29 +225,58 @@ document.addEventListener('DOMContentLoaded', function() {
         ];
     }));
 
-    form.addEventListener('submit', function(e) {
-        const startInput = document.getElementById('start_time').value;
-        const endInput = document.getElementById('end_time').value;
-        
-        if (!startInput || !endInput) return;
-        
-        const start = new Date(startInput);
-        const end = new Date(endInput);
-        
-        let isOverlap = false;
-        for (let i = 0; i < existingSchedules.length; i++) {
-            const schStart = new Date(existingSchedules[i].start);
-            const schEnd = new Date(existingSchedules[i].end);
-            
-            if (start < schEnd && end > schStart) {
-                isOverlap = true;
-                break;
+    const startInput = document.getElementById('start_time');
+    const endInput = document.getElementById('end_time');
+
+    function validateReservationTimes() {
+        startInput.setCustomValidity('');
+        endInput.setCustomValidity('');
+
+        const start = startInput.value ? new Date(startInput.value) : null;
+        const end = endInput.value ? new Date(endInput.value) : null;
+
+        if (start) {
+            const startMinutes = start.getHours() * 60 + start.getMinutes();
+            if (start <= new Date()) {
+                startInput.setCustomValidity('Waktu mulai harus setelah waktu sekarang.');
+            } else if (![0, 30].includes(start.getMinutes())) {
+                startInput.setCustomValidity('Waktu mulai hanya boleh pada menit 00 atau 30.');
+            } else if (startMinutes < 420 || startMinutes >= 1200) {
+                startInput.setCustomValidity('Jam mulai harus antara 07:00 dan sebelum 20:00.');
             }
         }
-        
-        if (isOverlap) {
+
+        if (end) {
+            const endMinutes = end.getHours() * 60 + end.getMinutes();
+            if (![0, 30].includes(end.getMinutes())) {
+                endInput.setCustomValidity('Waktu selesai hanya boleh pada menit 00 atau 30.');
+            } else if (endMinutes <= 420 || endMinutes > 1200) {
+                endInput.setCustomValidity('Waktu selesai harus setelah 07:00 dan maksimal 20:00.');
+            }
+        }
+
+        if (start && end && !startInput.validationMessage && !endInput.validationMessage) {
+            if (start.toDateString() !== end.toDateString()) {
+                endInput.setCustomValidity('Reservasi harus dimulai dan berakhir pada tanggal yang sama.');
+            } else if (end <= start) {
+                endInput.setCustomValidity('Waktu selesai harus setelah waktu mulai.');
+            } else if (existingSchedules.some(schedule => {
+                const scheduleStart = new Date(schedule.start);
+                const scheduleEnd = new Date(schedule.end);
+                return start < scheduleEnd && end > scheduleStart;
+            })) {
+                endInput.setCustomValidity('Jadwal bentrok dengan reservasi yang sudah tercatat.');
+            }
+        }
+    }
+
+    startInput.addEventListener('input', validateReservationTimes);
+    endInput.addEventListener('input', validateReservationTimes);
+
+    form.addEventListener('submit', function(e) {
+        validateReservationTimes();
+        if (!form.reportValidity()) {
             e.preventDefault();
-            alert('JADWAL NABRAK! Fasilitas ini sudah direservasi pada rentang waktu tersebut. Silakan pilih waktu lain.');
         }
     });
 });

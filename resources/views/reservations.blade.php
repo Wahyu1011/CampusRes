@@ -5,11 +5,18 @@
 @section('dashboard_content')
     <div class="recent-reservations glass-panel">
         <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <h2>{{ Auth::user()->role === 'admin' ? 'Semua Reservasi' : 'Reservasi Saya' }}</h2>
+            <h2>{{ Auth::user()->role === 'admin' ? 'Semua Reservasi' : (Auth::user()->role === 'petugas' ? 'Antrian Reservasi' : 'Reservasi Saya') }}</h2>
             
             <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
                 <form method="GET" action="{{ route('reservations.index') }}" style="display: flex; gap: 0.5rem; align-items: center;">
                     <input type="date" name="date" value="{{ request('date') }}" style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 8px; color: var(--text-main); outline: none;">
+                    <select name="status" aria-label="Filter status reservasi" style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 8px; color: var(--text-main);">
+                        <option value="all" {{ $status === 'all' ? 'selected' : '' }}>Semua status</option>
+                        <option value="pending" {{ $status === 'pending' ? 'selected' : '' }}>Menunggu</option>
+                        <option value="approved" {{ $status === 'approved' ? 'selected' : '' }}>Disetujui</option>
+                        <option value="rejected" {{ $status === 'rejected' ? 'selected' : '' }}>Ditolak</option>
+                        <option value="cancelled" {{ $status === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
+                    </select>
                     <button type="submit" style="background: var(--primary-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;">Cari Tanggal</button>
                     @if(request('date'))
                         <a href="{{ route('reservations.index') }}" style="color: #fca5a5; text-decoration: none; font-size: 0.85rem; margin-left: 0.5rem;">Reset</a>
@@ -24,17 +31,6 @@
             </div>
         </div>
         <ul class="reservation-list">
-            @php
-                $query = Auth::user()->role === 'admin' 
-                    ? \App\Models\Reservation::with(['facility', 'user'])->latest()
-                    : \App\Models\Reservation::with('facility')->where('user_id', Auth::id())->latest();
-                
-                if (request('date')) {
-                    $query->whereDate('start_time', request('date'));
-                }
-                
-                $reservations = $query->get();
-            @endphp
             @forelse($reservations as $res)
             <li class="reservation-item" style="flex-direction: column; align-items: stretch;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
@@ -43,7 +39,7 @@
                             <div>
                                 <h4>{{ $res->facility->name }}</h4>
                                 <p>{{ \Carbon\Carbon::parse($res->start_time)->format('d M Y, H:i') }} - {{ \Carbon\Carbon::parse($res->end_time)->format('H:i') }}</p>
-                                @if(Auth::user()->role === 'admin')
+                                @if(in_array(Auth::user()->role, ['admin', 'petugas'], true))
                                     <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem;"><i class="fas fa-user"></i> {{ $res->user->name }}</p>
                                 @endif
                             </div>
@@ -81,7 +77,7 @@
                         @endif
                     </div>
                 </div>
-                @if(Auth::user()->role === 'admin' && $res->status === 'pending')
+                @if(in_array(Auth::user()->role, ['admin', 'petugas'], true) && $res->status === 'pending')
                 <div style="display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 0.5rem; border-top: 1px solid var(--border-color); padding-top: 0.5rem;">
                     <form method="POST" action="{{ route('reservations.updateStatus', $res) }}" onsubmit="return confirm('Yakin ingin menyetujui reservasi ini?');">
                         @csrf
@@ -96,7 +92,7 @@
                 </div>
                 @endif
 
-                @if(Auth::user()->role === 'admin' && $res->status === 'approved' && \Carbon\Carbon::parse($res->start_time)->isFuture())
+                @if(in_array(Auth::user()->role, ['admin', 'petugas'], true) && $res->status === 'approved' && \Carbon\Carbon::parse($res->start_time)->isFuture())
                 <div style="margin-top: 0.5rem; border-top: 1px solid var(--border-color); padding-top: 0.5rem;">
                     <form method="POST" action="{{ route('reservations.adminCancel', $res) }}" style="display: flex; gap: 0.5rem; align-items: center;" onsubmit="return confirm('Yakin membatalkan reservasi ini secara paksa?');">
                         @csrf
