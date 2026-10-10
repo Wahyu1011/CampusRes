@@ -40,8 +40,8 @@
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <label for="image" style="font-weight: 500;">Foto Bukti Kerusakan (Opsional)</label>
-                <input type="file" id="image" name="image" accept="image/*" style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 8px; color: var(--text-main); outline: none;">
+                <label for="image" style="font-weight: 500;">Foto Bukti Kerusakan <span style="color:red;">*</span></label>
+                <input type="file" id="image" name="image" accept="image/*" required style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 8px; color: var(--text-main); outline: none;">
                 <small style="color: var(--text-muted);">Maksimal ukuran foto 2MB (JPG/PNG).</small>
             </div>
 

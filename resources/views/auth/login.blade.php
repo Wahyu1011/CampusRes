@@ -15,13 +15,13 @@
         <form method="POST" action="{{ route('login') }}" class="login-form">
             @csrf
             <div class="input-group">
-                <label for="username">Username / Email</label>
-                <input type="text" id="username" name="email" placeholder="Masukkan username/email Anda" required>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" autocomplete="email" placeholder="Masukkan alamat email" required>
             </div>
             <div class="input-group">
                 <label for="password">Password</label>
                 <div style="position: relative; display: flex; align-items: center;">
-                    <input type="password" id="password" name="password" placeholder="Masukkan password Anda" required style="padding-right: 40px; width: 100%;">
+                    <input type="password" id="password" name="password" autocomplete="current-password" placeholder="Masukkan password Anda" required style="padding-right: 40px; width: 100%;">
                     <i class="fas fa-eye" id="togglePassword" style="position: absolute; right: 15px; cursor: pointer; color: #64748b;" onclick="toggleVisibility('password', 'togglePassword')"></i>
                 </div>
             </div>

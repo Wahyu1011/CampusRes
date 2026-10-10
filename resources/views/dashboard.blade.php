@@ -5,7 +5,7 @@
 @section('dashboard_content')
     <div class="welcome-section">
         <h1>Selamat Datang, {{ Auth::user()->name }}! 👋</h1>
-        <p>{{ Auth::user()->role === 'admin' ? 'Kelola reservasi dan fasilitas kampus dari sini.' : 'Temukan dan reservasi fasilitas kampus dengan mudah.' }}</p>
+        <p>{{ Auth::user()->role === 'admin' ? 'Kelola reservasi dan fasilitas kampus dari sini.' : (Auth::user()->role === 'petugas' ? 'Proses antrian reservasi dan laporan fasilitas dari sini.' : 'Temukan dan reservasi fasilitas kampus dengan mudah.') }}</p>
     </div>
 
     <div class="stats-grid" style="margin-bottom: 2rem;">
@@ -28,6 +28,13 @@
             <div class="stat-info">
                 <h3>{{ $pendingCount }}</h3>
                 <p>Menunggu Persetujuan</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon icon-warning"><i class="fas fa-wrench"></i></div>
+            <div class="stat-info">
+                <h3>{{ $pendingReportCount }}</h3>
+                <p>Laporan Belum Selesai</p>
             </div>
         </div>
     </div>
@@ -62,7 +69,7 @@
                 <li class="reservation-item" style="padding: 0.8rem;">
                     <div class="res-details">
                         <h4 style="font-size: 0.9rem; margin-bottom: 0.2rem;">{{ Str::limit($res->facility->name, 20) }}</h4>
-                        <p style="font-size: 0.75rem;"><i class="fas fa-clock"></i> {{ \Carbon\Carbon::parse($res->start_time)->format('d M') }} | @if(Auth::user()->role === 'admin') <i class="fas fa-user" style="margin-left: 4px;"></i> {{ explode(' ', $res->user->name)[0] }} @endif</p>
+                        <p style="font-size: 0.75rem;"><i class="fas fa-clock"></i> {{ \Carbon\Carbon::parse($res->start_time)->format('d M') }} | @if(in_array(Auth::user()->role, ['admin', 'petugas'], true)) <i class="fas fa-user" style="margin-left: 4px;"></i> {{ explode(' ', $res->user->name)[0] }} @endif</p>
                     </div>
                     @php
                         $statusClass = match($res->status) {

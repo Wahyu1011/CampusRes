@@ -22,9 +22,9 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('facilities', App\Http\Controllers\FacilityController::class)->except(['show']);
-    Route::get('/reservations', function() {
-        return view('reservations');
-    })->name('reservations.index');
+    Route::get('/facility-reports/export', [\App\Http\Controllers\FacilitySummaryController::class, 'exportCsv'])->name('facility-reports.export');
+    Route::get('/facility-reports', [\App\Http\Controllers\FacilitySummaryController::class, 'index'])->name('facility-reports.index');
+    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
     
     Route::get('/reservations/export', [ReservationController::class, 'exportCsv'])->name('reservations.export');
     Route::get('/reservations/create/{facility}', [ReservationController::class, 'create'])->name('reservations.create');

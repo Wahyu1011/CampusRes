@@ -2,11 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Facility;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,21 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Admin user
-        User::factory()->create([
-            'name' => 'admin',
-            'email' => 'admin',
-            'password' => Hash::make('admin123'),
-            'role' => 'admin',
-        ]);
-
-        // Standard user
-        User::factory()->create([
-            'name' => 'Regular User',
-            'email' => 'user@user.com',
-            'password' => Hash::make('user123'),
-            'role' => 'user',
-        ]);
+        $this->call(DemoUserSeeder::class);
 
         // Facilities FSM UNDIP
         Facility::create([

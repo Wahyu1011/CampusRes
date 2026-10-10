@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -17,21 +17,24 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required'],
-            'password' => ['required'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
         ]);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $user = Auth::user();
             if ($user->account_status === 'pending') {
                 Auth::logout();
+
                 return back()->withErrors(['email' => 'Akun Anda belum diverifikasi oleh admin. Harap menunggu.']);
             } elseif ($user->account_status === 'rejected') {
                 Auth::logout();
+
                 return back()->withErrors(['email' => 'Pendaftaran akun Anda ditolak oleh admin.']);
             }
 
             $request->session()->regenerate();
+
             return redirect()->intended('dashboard');
         }
 
@@ -57,8 +60,8 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'user', 
-            'account_status' => 'pending'
+            'role' => 'user',
+            'account_status' => 'pending',
         ]);
 
         return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan tunggu verifikasi admin sebelum login.');
@@ -69,6 +72,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect('/');
     }
 }
