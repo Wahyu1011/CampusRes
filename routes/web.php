@@ -5,9 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReservationController;
 
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+Route::get('/', [\App\Http\Controllers\FacilityController::class, 'publicIndex'])->name('public.facilities');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -34,7 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/reservations/{reservation}/status', [ReservationController::class, 'updateStatus'])->name('reservations.updateStatus');
     Route::post('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
     Route::post('/reservations/{reservation}/admin-cancel', [ReservationController::class, 'adminCancel'])->name('reservations.adminCancel');
-    
+
     Route::resource('reports', App\Http\Controllers\ReportController::class)->except(['edit', 'update', 'destroy']);
     Route::post('/reports/{report}/status', [App\Http\Controllers\ReportController::class, 'updateStatus'])->name('reports.updateStatus');
     
