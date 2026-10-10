@@ -17,7 +17,12 @@
                     <a href="{{ route('reservations.index') }}" class="nav-item {{ request()->routeIs('reservations.index') ? 'active' : '' }}"><i class="fas fa-list-alt"></i> <span>Semua Reservasi</span></a>
                     <a href="{{ route('facilities.index') }}" class="nav-item {{ request()->routeIs('facilities.index') ? 'active' : '' }}"><i class="fas fa-building"></i> <span>Kelola Fasilitas</span></a>
                     <a href="{{ route('reports.index') }}" class="nav-item {{ request()->routeIs('reports.*') ? 'active' : '' }}"><i class="fas fa-exclamation-triangle"></i> <span>Daftar Laporan</span></a>
+                    <a href="{{ route('facility-reports.index') }}" class="nav-item {{ request()->routeIs('facility-reports.*') ? 'active' : '' }}"><i class="fas fa-chart-bar"></i> <span>Rekap Fasilitas</span></a>
                     <a href="{{ route('users.index') }}" class="nav-item {{ request()->routeIs('users.*') ? 'active' : '' }}"><i class="fas fa-users"></i> <span>Kelola Pengguna</span></a>
+                @elseif(Auth::user()->role === 'petugas')
+                    <a href="{{ route('reservations.index') }}" class="nav-item {{ request()->routeIs('reservations.index') ? 'active' : '' }}"><i class="fas fa-list-alt"></i> <span>Antrian Reservasi</span></a>
+                    <a href="{{ route('facilities.index') }}" class="nav-item {{ request()->routeIs('facilities.index') ? 'active' : '' }}"><i class="fas fa-building"></i> <span>Status Fasilitas</span></a>
+                    <a href="{{ route('reports.index') }}" class="nav-item {{ request()->routeIs('reports.*') ? 'active' : '' }}"><i class="fas fa-exclamation-triangle"></i> <span>Daftar Laporan</span></a>
                 @else
                     <a href="{{ route('reservations.index') }}" class="nav-item {{ request()->routeIs('reservations.index') ? 'active' : '' }}"><i class="fas fa-calendar-alt"></i> <span>Reservasi Saya</span></a>
                     <a href="{{ route('facilities.index') }}" class="nav-item {{ request()->routeIs('facilities.index') ? 'active' : '' }}"><i class="fas fa-building"></i> <span>Fasilitas</span></a>
@@ -55,11 +60,6 @@
                     </button>
                     <div class="notification-bell">
                         <i class="fas fa-bell"></i>
-                        @php
-                            $notifCount = Auth::user()->role === 'admin' 
-                                ? \App\Models\Reservation::where('status', 'pending')->count()
-                                : \App\Models\Reservation::where('user_id', Auth::id())->where('status', 'approved')->where('start_time', '>=', now())->count();
-                        @endphp
                         @if($notifCount > 0)
                             <span class="badge">{{ $notifCount }}</span>
                         @endif
