@@ -5,7 +5,7 @@
 @section('dashboard_content')
 <div class="welcome-section mb-4">
     <h1>Manajemen Pengguna</h1>
-    <p>Kelola akses, buat akun petugas, dan verifikasi pendaftaran mandiri.</p>
+    <p>Kelola akses, buat akun pengguna atau petugas, dan verifikasi pendaftaran mandiri.</p>
 </div>
 
 <div class="glass-panel mb-4">
@@ -31,7 +31,8 @@
             <label style="font-size: 0.9rem; color: var(--text-muted);">Role</label>
             <select name="role" required style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.8rem; border-radius: 8px; color: var(--text-main);">
                 <option value="user">Pengguna Biasa</option>
-                <option value="admin">Admin / Petugas</option>
+                <option value="petugas">Petugas</option>
+                <option value="admin">Admin</option>
             </select>
         </div>
         <button type="submit" class="btn-reserve" style="width: auto; padding: 0.8rem 1.5rem;"><i class="fas fa-plus"></i> Tambah</button>
