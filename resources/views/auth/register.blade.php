@@ -16,16 +16,16 @@
             @csrf
             <div class="input-group">
                 <label for="regName">Nama Lengkap</label>
-                <input type="text" id="regName" name="name" placeholder="Masukkan nama lengkap" required>
+                <input type="text" id="regName" name="name" autocomplete="name" placeholder="Masukkan nama lengkap" required>
             </div>
             <div class="input-group">
                 <label for="regEmail">Email</label>
-                <input type="email" id="regEmail" name="email" placeholder="Masukkan alamat email" required>
+                <input type="email" id="regEmail" name="email" autocomplete="email" placeholder="Masukkan alamat email" required>
             </div>
             <div class="input-group">
                 <label for="regPassword">Password</label>
                 <div style="position: relative; display: flex; align-items: center;">
-                    <input type="password" id="regPassword" name="password" placeholder="Buat password" required onkeyup="checkPasswordStrength(this.value)" style="padding-right: 40px; width: 100%;">
+                    <input type="password" id="regPassword" name="password" autocomplete="new-password" minlength="8" placeholder="Buat password" required onkeyup="checkPasswordStrength(this.value)" style="padding-right: 40px; width: 100%;">
                     <i class="fas fa-eye" id="togglePassword" style="position: absolute; right: 15px; cursor: pointer; color: #64748b;" onclick="toggleVisibility('regPassword', 'togglePassword')"></i>
                 </div>
                 
@@ -40,7 +40,7 @@
             <div class="input-group">
                 <label for="regConfirmPassword">Konfirmasi Password</label>
                 <div style="position: relative; display: flex; align-items: center;">
-                    <input type="password" id="regConfirmPassword" name="password_confirmation" placeholder="Ulangi password" required style="padding-right: 40px; width: 100%;">
+                    <input type="password" id="regConfirmPassword" name="password_confirmation" autocomplete="new-password" minlength="8" placeholder="Ulangi password" required style="padding-right: 40px; width: 100%;">
                     <i class="fas fa-eye" id="toggleConfirmPassword" style="position: absolute; right: 15px; cursor: pointer; color: #64748b;" onclick="toggleVisibility('regConfirmPassword', 'toggleConfirmPassword')"></i>
                 </div>
             </div>
@@ -61,6 +61,28 @@
 
 @push('scripts')
 <script>
+    const registrationForm = document.querySelector('.login-form');
+    const registrationPassword = document.getElementById('regPassword');
+    const registrationConfirmation = document.getElementById('regConfirmPassword');
+
+    function validatePasswordConfirmation() {
+        registrationConfirmation.setCustomValidity(
+            registrationConfirmation.value && registrationConfirmation.value !== registrationPassword.value
+                ? 'Konfirmasi password harus sama.'
+                : ''
+        );
+    }
+
+    registrationPassword.addEventListener('input', validatePasswordConfirmation);
+    registrationConfirmation.addEventListener('input', validatePasswordConfirmation);
+    registrationForm.addEventListener('submit', function (event) {
+        validatePasswordConfirmation();
+        if (!registrationConfirmation.checkValidity()) {
+            event.preventDefault();
+            registrationConfirmation.reportValidity();
+        }
+    });
+
     function checkPasswordStrength(password) {
         const container = document.getElementById('password-strength-container');
         const bar = document.getElementById('strength-bar');
