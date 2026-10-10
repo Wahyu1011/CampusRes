@@ -69,16 +69,21 @@
                         </div>
                     @endif
 
-                    @if(Auth::user()->role === 'admin' && in_array($rep->status, ['new', 'processing']))
+                    @if(in_array(Auth::user()->role, ['admin', 'petugas'], true) && in_array($rep->status, ['new', 'processing']))
                         <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; margin-top: 1rem;">
-                            <form method="POST" action="{{ route('reports.updateStatus', $rep) }}" style="display: flex; gap: 0.8rem; align-items: flex-start; flex-wrap: wrap;">
+                            <form method="POST" action="{{ route('reports.updateStatus', $rep) }}" class="report-status-form" style="display: flex; gap: 0.8rem; align-items: flex-start; flex-wrap: wrap;">
                                 @csrf
-                                <select name="status" required style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 5px; color: var(--text-main);">
+                                <select name="status" class="report-status-select" required style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 5px; color: var(--text-main);">
                                     <option value="processing" {{ $rep->status == 'processing' ? 'selected' : '' }}>Tandai Diproses</option>
                                     <option value="completed">Tandai Selesai</option>
                                     <option value="rejected">Tolak Laporan</option>
                                 </select>
-                                <input type="text" name="resolution_note" placeholder="Catatan opsional (solusi/alasan)..." style="flex: 1; min-width: 200px; background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 5px; color: var(--text-main);">
+                                <select name="facility_status" style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 5px; color: var(--text-main);">
+                                    <option value="">Status fasilitas tidak diubah</option>
+                                    <option value="active">Fasilitas aktif</option>
+                                    <option value="maintenance">Tandai dalam perbaikan</option>
+                                </select>
+                                <input type="text" name="resolution_note" class="report-resolution-note" placeholder="Catatan wajib saat selesai/ditolak..." style="flex: 1; min-width: 200px; background: var(--input-bg); border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 5px; color: var(--text-main);">
                                 <button type="submit" style="background: var(--primary-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">Update Status</button>
                             </form>
                         </div>
@@ -89,4 +94,19 @@
         </div>
     @endif
 </div>
+
+@push('scripts')
+<script>
+    document.querySelectorAll('.report-status-form').forEach(form => {
+        const status = form.querySelector('.report-status-select');
+        const note = form.querySelector('.report-resolution-note');
+        const updateNoteRequirement = () => {
+            note.required = ['completed', 'rejected'].includes(status.value);
+        };
+
+        status.addEventListener('change', updateNoteRequirement);
+        updateNoteRequirement();
+    });
+</script>
+@endpush
 @endsection
