@@ -58,11 +58,50 @@
                     <button id="themeToggleBtn" title="Ganti Tema" style="border: none; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.05); transition: background 0.3s; margin-right: 0.5rem;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
                         <i class="fas fa-sun" id="themeIcon"></i>
                     </button>
-                    <div class="notification-bell">
-                        <i class="fas fa-bell"></i>
-                        @if($notifCount > 0)
-                            <span class="badge">{{ $notifCount }}</span>
-                        @endif
+                    <div class="notification-wrapper">
+                        <button type="button" class="notification-bell" id="notificationToggle" title="Notifikasi" aria-haspopup="true" aria-expanded="false" aria-controls="notificationDropdown">
+                            <i class="fas fa-bell"></i>
+                            @if($notifCount > 0)
+                                <span class="badge">{{ $notifCount }}</span>
+                            @endif
+                        </button>
+                        <div class="notification-dropdown" id="notificationDropdown">
+                            <div class="notification-header">
+                                <strong>Notifikasi</strong>
+                                <span>{{ $notifIsOperator ? 'Reservasi menunggu persetujuan' : 'Reservasi disetujui mendatang' }}</span>
+                            </div>
+                            <ul class="notification-list">
+                                @forelse($notifications as $notification)
+                                    <li>
+                                        <a href="{{ $notifUrl }}" class="notification-item">
+                                            <i class="fas {{ $notifIsOperator ? 'fa-hourglass-half is-warning' : 'fa-calendar-check is-success' }}"></i>
+                                            <div>
+                                                <p>
+                                                    @if($notifIsOperator)
+                                                        <strong>{{ $notification->user?->name ?? 'Pengguna' }}</strong> mengajukan reservasi <strong>{{ $notification->facility?->name ?? 'Fasilitas' }}</strong>
+                                                    @else
+                                                        Reservasi <strong>{{ $notification->facility?->name ?? 'Fasilitas' }}</strong> telah disetujui
+                                                    @endif
+                                                </p>
+                                                <small>
+                                                    {{ $notification->start_time->translatedFormat('d M Y, H:i') }}
+                                                    @if($notifIsOperator)
+                                                        &middot; diajukan {{ $notification->created_at->diffForHumans() }}
+                                                    @endif
+                                                </small>
+                                            </div>
+                                        </a>
+                                    </li>
+                                @empty
+                                    <li class="notification-empty">Tidak ada notifikasi.</li>
+                                @endforelse
+                            </ul>
+                            @if($notifCount > 0)
+                                <a href="{{ $notifUrl }}" class="notification-footer">
+                                    Lihat semua ({{ $notifCount }})
+                                </a>
+                            @endif
+                        </div>
                     </div>
                     <div class="avatar">
                         <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=6366f1&color=fff" alt="User Avatar">

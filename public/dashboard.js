@@ -22,6 +22,39 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 100 * index);
     });
 
+    // Notification Dropdown (opens on hover via CSS; click toggle for touch & keyboard)
+    const notificationToggle = document.getElementById('notificationToggle');
+    const notificationWrapper = notificationToggle?.closest('.notification-wrapper');
+
+    if (notificationToggle && notificationWrapper) {
+        const isNotificationOpen = () => notificationWrapper.classList.contains('is-open');
+        const setNotificationOpen = (open) => {
+            notificationWrapper.classList.toggle('is-open', open);
+            notificationToggle.setAttribute('aria-expanded', String(open));
+        };
+
+        notificationWrapper.addEventListener('mouseenter', () => notificationToggle.setAttribute('aria-expanded', 'true'));
+        notificationWrapper.addEventListener('mouseleave', () => notificationToggle.setAttribute('aria-expanded', String(isNotificationOpen())));
+
+        notificationToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setNotificationOpen(!isNotificationOpen());
+        });
+
+        document.addEventListener('click', (e) => {
+            if (isNotificationOpen() && !notificationWrapper.contains(e.target)) {
+                setNotificationOpen(false);
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isNotificationOpen()) {
+                setNotificationOpen(false);
+                notificationToggle.focus();
+            }
+        });
+    }
+
     // Theme Toggle Logic
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     const themeIcon = document.getElementById('themeIcon');
